@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <title>Document</title>
+
+  <style>
+
+    * {
+
+      box-sizing: border-box;
+
+      outline: none;
+
+    }
+
+    h1{
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      padding-top: 1em;
+
+      font-size: 2em;
+
+    }
+
+    body {
+
+      font-family: Arial, sans-serif;
+
+      background-color: #f4f4f4;
+
+      margin: 0;
+
+      padding: 0;
+
+    }
+
+    .board {
+
+      max-width: 600px;
+
+      margin: 30px auto;
+
+      background-color: #fff;
+
+      border-radius: 5px;
+
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+    }
+
+    header {
+
+      padding: 20px;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: space-between;
+
+      border-bottom: 1px solid #e0e0e0;
+
+    }
+
+    .inputText {
+
+      padding: 10px;
+
+      font-size: 16px;
+
+      border: 1px solid #e0e0e0;
+
+      border-radius: 5px 0 0 5px;
+
+      flex-grow: 1;
+
+    }
+
+    button {
+
+      padding: 10px 40px;
+
+      font-size: 16px;
+
+      background-color: #4caf50;
+
+      color: #fff;
+
+      border: 1px solid #e0e0e0;
+
+      border-radius:0 5px 5px 0;
+
+      cursor: pointer;
+
+      transition: background-color 0.3s ease;
+
+    }
+
+    button:hover {
+
+      background-color: #45a049;
+
+    }
+
+    .list {
+
+      padding: 20px;
+
+    }
+
+    ul {
+
+      height: 465px;
+
+      list-style: none;
+
+      padding: 0;
+
+      overflow-y: auto;
+
+    }
+
+    li {
+
+      display: flex;
+
+      align-items: center;
+
+      border: 1px solid #e0e0e0;
+
+      border-radius: 5px;
+
+      margin-bottom: 10px;
+
+      padding: 10px;
+
+    }
+
+    li:last-child {
+
+      margin-bottom: 0;
+
+    }
+
+    label {
+
+      display: flex;
+
+      align-items: center;
+
+      flex-grow: 1;
+
+    }
+
+    .text {
+
+      margin-left: 10px;
+
+      font-size: 18px;
+
+      flex-grow: 1;
+
+    }
+
+    .del {
+
+      padding: 5px 10px;
+
+      font-size: 14px;
+
+      background-color: #f44336;
+
+      color: #fff;
+
+      border: none;
+
+      border-radius: 5px;
+
+      cursor: pointer;
+
+      transition: background-color 0.3s ease;
+
+    }
+
+    .del:hover {
+
+      background-color: #e53935;
+
+    }
+
+    input:checked + b + .text {
+
+      text-decoration: line-through;
+
+      color: #888;
+
+    }
+
+  
+
+    .status {
+
+      padding: 10px;
+
+      display: flex;
+
+      justify-content: space-between;
+
+      font-size: 14px;
+
+      color: #888;
+
+    }
+
+  
+
+  </style>
+
+  
+
+  
+
+</head>
+
+<body>
+
+  
+
+  <div class="board">
+
+    <h1>To do list</h1>
+
+    <header>
+
+      
+
+      <input type="text" class="inputText" placeholder="add new tesk...">
+
+      <button onclick="add()">Add</button>
+
+    </header>
+
+    
+
+    <div class="list">
+
+      <ul class="show"></ul>
+
+    </div>
+
+    <div class="status">
+
+      <span>Total Tasks: <span id="totalTasks"></span></span>
+
+      <span>Completed Tasks: <span id="completedTasks"></span></span>
+
+    </div>
+
+    
+
+  </div>
+
+  
+
+  
+
+  
+
+  <script>
+
+  var num=0;
+
+  var dataList=new Array;
+
+  var conditionList=new Array;
+
+  var inp=document.querySelector('.inputText');
+
+  var show=document.querySelector('.show');
+
+  var totalTasks=document.querySelector('#totalTasks');
+
+  var completedTasks=document.querySelector('#completedTasks');
+
+  function add(){
+
+    if(inp.value !==''){
+
+    dataList.push(inp.value);
+
+    conditionList.push(false);
+
+    arrange();
+
+    inp.value="";
+
+    };
+
+    inp.focus();
+
+  };
+
+  
+
+  inp.addEventListener('keypress',function(key){
+
+    if (key.keyCode==13){
+
+      add();
+
+    };
+
+  })
+
+  
+
+  function arrange(){
+
+    show.innerHTML='';
+
+    for(var n in dataList){
+
+      var con=conditionList[n]
+
+      show.innerHTML=show.innerHTML+`
+
+        <li>
+
+          <label>
+
+            <input type="checkbox" name="" id="" ${con ? "checked":""} onchange="change(${n})">
+
+            <b>${+n+1}</b>
+
+            <div class="text"> ${dataList[n]}</div>
+
+          </label>
+
+          <button class="del" onclick="del(${n})">Delete</button>
+
+        </li>
+
+      
+
+      `
+
+    };
+
+    testNum();
+
+  };
+
+  
+
+  function del(index){
+
+    dataList.splice(index, 1);
+
+    conditionList.splice(index, 1);
+
+    arrange();
+
+    testNum();
+
+  };
+
+  
+
+  function change(ind){
+
+    if(conditionList[ind]==true){
+
+      conditionList[ind]=false;
+
+    }else{conditionList[ind]=true}
+
+    testNum();
+
+  };
+
+  
+
+  function testNum(){
+
+    num = 0;
+
+    for (n in conditionList) {
+
+      conditionList[n] ? num += 1 : num
+
+    };
+
+    totalTasks.innerHTML = dataList.length;
+
+    completedTasks.innerHTML = num;
+
+  };
+
+  
+
+  arrange();
+
+  </script>
+
+  
+
+  
+
+</body>
+
+</html>
